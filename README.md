@@ -5,13 +5,15 @@ target environment
 * [MixedRealityToolkit-Unity for Unity 2017.1.2](https://github.com/Microsoft/MixedRealityToolkit-Unity/releases/tag/v1.2017.2.0)
 
 In above environment, unity's HoloLensInputModule omit some click event.
-So, I use custom InputModule, based on [LookInputModule][ref-look-input-module]
 
-### MixedRealityToolkit's InputManager + Unity's HoloLensInputModule
+**MixedRealityToolkit's InputManager + Unity's HoloLensInputModule**
 
 ![HoloLensInputModule](https://raw.githubusercontent.com/if1live/HoloLens-LookInput-sample/master/document/basic-input.gif)
 
-### MixedRealityToolkit's InputManager + MyHoloLensInputModule
+
+So, I use custom InputModule, based on [LookInputModule][ref-look-input-module]
+
+**MixedRealityToolkit's InputManager + MyHoloLensInputModule**
 
 ![MyHoloLensInputModule](https://raw.githubusercontent.com/if1live/HoloLens-LookInput-sample/master/document/custom-input.gif)
 
