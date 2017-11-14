@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Mihiro/Scenes/main.unity
+    guid: 59f6a41b59d25024e9a2a8aa5d18d2e0

@@ -11,7 +11,7 @@ using UnityEngine.XR;
  */
 
 namespace Assets.Mihiro.Scripts {
-    class MyHoloLensInputModule : BaseInputModule {
+    class MyHoloLensInputModule : BaseInputModule, HoloToolkit.Unity.InputModule.IInputHandler {
 
         // singleton makes it easy to access the instanced fields from other code without needing a pointer
         // e.g.  if (LookInputModule.singleton != null && LookInputModule.singleton.controlAxisUsed) ...
@@ -261,6 +261,47 @@ namespace Assets.Mihiro.Scripts {
             }
         }
 
+        bool inputFired = false;
+        enum HoloLensInputState {
+            Down,
+            Up,
+            Idle,
+        }
+        HoloLensInputState inputstate = HoloLensInputState.Idle;
+
+        public void OnInputDown(HoloToolkit.Unity.InputModule.InputEventData eventData) {
+            inputstate = HoloLensInputState.Down;
+        }
+
+        public void OnInputUp(HoloToolkit.Unity.InputModule.InputEventData eventData) {
+            inputstate = HoloLensInputState.Up;
+        }
+
+        void LateUpdate() {
+            inputstate = HoloLensInputState.Idle;
+        }
+
+        bool IsDown() {
+            var f = (inputstate == HoloLensInputState.Down);
+            return f;
+        }
+        bool IsUp() {
+            var f = (inputstate == HoloLensInputState.Up);
+            return f;
+        }
+
+        protected override void Start() {
+            base.Start();
+            HoloToolkit.Unity.InputModule.InputManager.Instance.AddGlobalListener(gameObject);
+        }
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            var inputMgr = HoloToolkit.Unity.InputModule.InputManager.Instance;
+            if (inputMgr != null) {
+                inputMgr.RemoveGlobalListener(gameObject);
+            }
+        }
+
         // send update event to selected object
         // needed for InputField to receive keyboard input
         private bool SendUpdateEventToSelectedObject() {
@@ -297,7 +338,7 @@ namespace Assets.Mihiro.Scripts {
             if (!ignoreInputsWhenLookAway || ignoreInputsWhenLookAway && currentLook != null) {
                 // button down handling
                 _buttonUsed = false;
-                if (Input.GetButtonDown(submitButtonName)) {
+                if (IsDown()) {
                     ClearSelection();
                     lookData.pressPosition = lookData.position;
                     lookData.pointerPressRaycast = lookData.pointerCurrentRaycast;
@@ -366,7 +407,7 @@ namespace Assets.Mihiro.Scripts {
             }
 
             // have to handle button up even if looking away
-            if (Input.GetButtonUp(submitButtonName)) {
+            if (IsUp()) {
                 if (currentDragging) {
                     ExecuteEvents.Execute(currentDragging, lookData, ExecuteEvents.endDragHandler);
                     if (currentLook != null) {
